@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Banking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BankingApplication.styles.css" asp-append-version="true" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <div class="flex flex-1">
+        <aside class="w-64 flex-shrink-0 bg-blue-900 text-white p-5 h-screen fixed top-0 left-0 overflow-auto">
+            <h1 class="text-2xl font-bold mb-5"> Apex Dynamics</h1>
+            <nav>
+                <ul>
+                    <li class="mb-3"><a class="hover:text-gray-300" asp-area="" asp-controller="Home" asp-action="Index">🏦 Home</a></li>
+                    <li class="mb-3"><a class="hover:text-gray-300" asp-area="" asp-controller="Dashboard" asp-action="Index">📊 Dashboard</a></li>
+                    <li class="mb-3"><a class="hover:text-gray-300" asp-area="" asp-controller="Transactions" asp-action="Index">💳 Transactions</a></li>
+                    <li class="mb-3"><a class="hover:text-gray-300" asp-area="" asp-controller="Transfer" asp-action="Index">💸 Transfer Funds</a></li>
+                    <li class="mb-3"><a class="hover:text-gray-300" asp-area="" asp-controller="Profile" asp-action="Index">👤 Profile</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="flex-1 flex flex-col">
+            <header class="bg-white shadow-md p-4 mb-5 flex justify-between items-center">
+                <h2 class="text-xl font-semibold">@ViewData["Title"]</h2>               
+            </header>
+
+            <main role="main" class="flex-grow p-10">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <footer class="bg-gray-200 text-center text-sm text-gray-600 py-3 mt-auto">
+        &copy; 2025 - Apex Dynamics -
+        <a class="text-blue-600 hover:underline" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        -
+        <a class="text-blue-600 hover:underline" asp-area="" asp-controller="Home" asp-action="Terms">Terms of Use</a>
+    </footer>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+
+<main role="main" class="flex-grow flex items-center justify-center p-10 pl-80">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-2xl font-semibold text-blue-900 text-center mb-5">🔑 Register Your Account</h2>
+
+        <form action="/Account/Register" method="POST" class="space-y-5">
+            <div>
+                <label for="name" class="block text-gray-700 font-medium">First name</label>
+                <input type="text" id="firstName" name="firstName" required
+                       class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300">
+            </div>
+
+            <div>
+                <label for="name" class="block text-gray-700 font-medium">Last name</label>
+                <input type="text" id="lastName" name="lastName" required
+                       class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300">
+            </div>
+
+            <div>
+                <label for="dateOfBirth" class="block text-gray-700 font-medium">Date of birth</label>
+                <input type="date" id="dateOfBirth" name="dateOfBirth" required
+                       class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300">
+            </div>
+
+            <div>
+                <label for="email" class="block text-gray-700 font-medium">Email Address</label>
+                <input type="email" id="email" name="email" required
+                       class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300">
+            </div>
+
+            <div>
+                <label for="password" class="block text-gray-700 font-medium">Password</label>
+                <input type="password" id="password" name="password" required
+                       class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300">
+            </div>
+
+@*             <div class="flex items-center">
+                <input type="checkbox" id="remember" name="remember" class="mr-2">
+                <label for="remember" class="text-gray-700">Remember Me</label>
+            </div> *@
+
+            <button type="submit"
+                    class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                Register Account
+            </button>
+
+            <div class="text-center mt-4">
+                <p>Already have an account? 
+                    <a href="/Account/Login" class="text-blue-600 hover:underline">Login</a>
+                </p>
+                
+            </div>
+        </form>
+    </div>
+</main>
