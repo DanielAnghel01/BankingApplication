@@ -1,16 +1,19 @@
-﻿using BankingApplication.Models;
+﻿using BankingApplication.Infrastructure;
+using BankingApplication.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace BankingApplication.Controllers
 {
-    public class AccountController : Controller
+    public class UserAccountController : Controller
     {
-        private readonly ILogger<AccountController> _logger;
+        private readonly ILogger<UserAccountController> _logger;
+        private readonly BankingDbContext _context;
 
-        public AccountController(ILogger<AccountController> logger)
+        public UserAccountController(ILogger<UserAccountController> logger, BankingDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()

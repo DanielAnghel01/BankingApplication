@@ -1,0 +1,42 @@
+﻿@model BankingApplication.Models.ExchangeRate
+
+@{
+    ViewData["Title"] = "Create Exchange Rate";
+}
+
+<div class="bg-white p-6 rounded-lg shadow-md w-full max-w-lg mx-auto mt-10">
+    <h1 class="text-2xl font-semibold text-gray-800 mb-4">Create Exchange Rate</h1>
+
+    <form asp-action="Create" class="space-y-4">
+        <div asp-validation-summary="ModelOnly" class="text-red-500"></div>
+
+        <div>
+            <label asp-for="CurrencyName" class="block text-gray-700 font-medium">Currency Name</label>
+            <input asp-for="CurrencyName" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+            <span asp-validation-for="CurrencyName" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="Rate" class="block text-gray-700 font-medium">Exchange Rate</label>
+            <input asp-for="Rate" type="number" step="0.01" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+            <span asp-validation-for="Rate" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="UpdatedAt" class="block text-gray-700 font-medium">Last Updated</label>
+            <input asp-for="UpdatedAt" type="datetime-local" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+            <span asp-validation-for="UpdatedAt" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="flex justify-between items-center mt-4">
+            <a asp-action="Index" class="text-blue-600 hover:underline">← Back to List</a>
+            <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">Create</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<BankingApplication.Models.ExchangeRate>
+
+@{
+    ViewData["Title"] = "Exchange Rates";
+}
+
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <h1 class="text-2xl font-semibold mb-4">Exchange Rates</h1>
+
+    <table class="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden shadow-md">
+        <thead class="bg-blue-600 text-white">
+            <tr>
+                <th class="px-4 py-2 text-left">@Html.DisplayNameFor(model => model.CurrencyName)</th>
+                <th class="px-4 py-2 text-left">@Html.DisplayNameFor(model => model.Rate)</th>
+                <th class="px-4 py-2 text-left">@Html.DisplayNameFor(model => model.UpdatedAt)</th>
+                <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="border-b hover:bg-gray-100">
+                    <td class="px-4 py-2">@Html.DisplayFor(modelItem => item.CurrencyName)</td>
+                    <td class="px-4 py-2">@Html.DisplayFor(modelItem => item.Rate)</td>
+                    <td class="px-4 py-2">@Html.DisplayFor(modelItem => item.UpdatedAt)</td>
+                    <td class="px-4 py-2">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="text-blue-600 hover:underline">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id" class="text-green-600 hover:underline">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="text-red-600 hover:underline">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Floating "Create New" Button -->
+<a asp-action="Create" class="fixed bottom-6 right-6 bg-blue-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-blue-700 transition">
+    ➕ Add New Rate
+</a>
