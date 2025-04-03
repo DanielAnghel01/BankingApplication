@@ -7,7 +7,8 @@ using Microsoft.Data.SqlClient;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services
+    .AddControllersWithViews();
 
 // Add the DbContext using a connection string from appsettings.json
 builder.Services.AddDbContext<BankingDbContext>(options =>
