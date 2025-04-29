@@ -1,27 +1,29 @@
-﻿using BankingApplication.Models;
+﻿using BankingApplication.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace BankingApplication.Controllers
 {
     public class ProfileController : Controller
     {
-        private readonly ILogger<ProfileController> _logger;
+        private readonly IProfileService _profileService;
 
-        public ProfileController(ILogger<ProfileController> logger)
+        public ProfileController(IProfileService profileService)
         {
-            _logger = logger;
+            _profileService = profileService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            int userId = 1;
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var profile = await _profileService.GetUserProfileAsync(userId);
+
+            if (profile == null)
+            {
+                return NotFound();
+            }
+
+            return View(profile);
         }
     }
 }

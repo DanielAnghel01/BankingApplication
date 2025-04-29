@@ -3,12 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection; 
 using Microsoft.Data.SqlClient;
+using BankingApplication.Services.Interface;
+using BankingApplication.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services
     .AddControllersWithViews();
+builder.Services.AddScoped<IBankAccountService, BankAccountService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 
 // Add the DbContext using a connection string from appsettings.json
 builder.Services.AddDbContext<BankingDbContext>(options =>

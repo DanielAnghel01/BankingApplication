@@ -5,12 +5,12 @@ using System.Diagnostics;
 
 namespace BankingApplication.Controllers
 {
-    public class UserAccountController : Controller
+    public class AccountController : Controller
     {
-        private readonly ILogger<UserAccountController> _logger;
+        private readonly ILogger<AccountController> _logger;
         private readonly BankingDbContext _context;
 
-        public UserAccountController(ILogger<UserAccountController> logger, BankingDbContext context)
+        public AccountController(ILogger<AccountController> logger, BankingDbContext context)
         {
             _logger = logger;
             _context = context;
@@ -21,14 +21,17 @@ namespace BankingApplication.Controllers
             return View();
         }
 
+        [Route("Account/Register")]
         public IActionResult Register()
         {
             return View();
         }
+        [Route("Account/Login")]
         public IActionResult Login()
         {
             return View();
-        } 
+        }
+        [Route("Account/ResetPassword")]
         public IActionResult ResetPassword()
         {
             return View();

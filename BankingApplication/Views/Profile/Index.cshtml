@@ -1,7 +1,57 @@
-﻿@{
+﻿@model BankingApplication.Views.Dtos.ProfileViewModel
+
+@{
     ViewData["Title"] = "Profile";
 }
 
-<div class="text-center">
-    <h1 class="display-4">User informations, settings and logout options</h1>
+<div class="max-w-5xl mx-auto p-8">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Welcome, @Model.UserName!</h1>
+
+    <div class="flex justify-center space-x-4 mb-8">
+        <a asp-controller="Home" asp-action="Index" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            🏠 Home
+        </a>
+        <a asp-controller="Transactions" asp-action="Index" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+            💳 View Transactions
+        </a>
+        <a asp-controller="BankAccounts" asp-action="Create" asp-route-userId="@Model.UserId" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded">
+            ➕ Create Bank Account
+        </a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-700">Your Bank Accounts</h2>
+
+        @if (Model.BankAccounts != null && Model.BankAccounts.Any())
+        {
+            <table class="min-w-full table-auto">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-gray-600 font-semibold">Account Number</th>
+                        <th class="px-4 py-2 text-left text-gray-600 font-semibold">Balance</th>
+                        <th class="px-4 py-2 text-left text-gray-600 font-semibold">Account Type</th>
+                        <th class="px-4 py-2 text-left text-gray-600 font-semibold">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var account in Model.BankAccounts)
+                    {
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="px-4 py-2">@account.AccountNumber</td>
+                            <td class="px-4 py-2">@account.Balance.ToString("C")</td>
+                            <td class="px-4 py-2">@account.AccountType</td>
+                            <td class="px-4 py-2 space-x-2">
+                                <a asp-controller="BankAccounts" asp-action="Details" asp-route-id="@account.Id" class="text-blue-600 hover:underline">Details</a>
+                                <a asp-controller="Transactions" asp-action="History" asp-route-accountId="@account.Id" class="text-green-600 hover:underline">Transactions</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-gray-600">You don't have any bank accounts yet.</p>
+        }
+    </div>
 </div>
