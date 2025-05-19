@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Withdraw";
+}
+<div class="max-w-5xl mx-auto p-8">
+<h2>Withdraw Funds</h2>
+
+<form asp-action="Withdraw" method="post">
+        <div class="mb-3">
+            <label for="fromAccountId" class="form-label">From Account</label>
+            <select id="fromAccountId" name="fromAccountId" class="form-select" required>
+                <option value="">-- Select an Account --</option>
+                @foreach (var account in ViewBag.Accounts as List<SelectListItem>)
+                {
+                    <option value="@account.Value">@account.Text</option>
+                }
+            </select>
+            <div class="invalid-feedback">
+                Please select the source account.
+            </div>
+        </div>
+    <div class="form-group">
+        <label for="amount">Amount</label>
+        <input type="number" name="amount" id="amount" step="0.01" min="0.01" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Withdraw</button>
+</form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger mt-3">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @TempData["SuccessMessage"]
+    </div>
+}
+</div>

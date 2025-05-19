@@ -1,44 +1,47 @@
 ﻿using BankingApplication.Infrastructure;
 using BankingApplication.Services.Interface;
 using BankingApplication.Views.Dtos;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using BankingApplication.Models;
 
 namespace BankingApplication.Services
 {
     public class ProfileService : IProfileService
     {
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly BankingDbContext _context;
 
-        public ProfileService(BankingDbContext context)
+        public ProfileService(UserManager<IdentityUser> userManager, BankingDbContext context)
         {
+            _userManager = userManager;
             _context = context;
         }
 
-        public async Task<ProfileViewModel> GetUserProfileAsync(int userId)
+        public async Task<ProfileViewModel> GetUserProfileAsync(string identityUserId)
         {
-            var user = await _context.UserAccounts.FindAsync(userId);
+            var user = await _userManager.Users
+                .FirstOrDefaultAsync(u => u.Id == identityUserId);
+
             if (user == null)
-            {
                 return null;
-            }
 
             var accounts = await _context.BankAccounts
-                .Where(a => a.UserId == userId)
-                .ToListAsync();
+            .Where(a => a.UserId == identityUserId)
+            .ToListAsync();
 
             var profile = new ProfileViewModel
             {
-                UserName = user.FirstName,
+                UserName = user.UserName,
+                Email = user.Email,
                 BankAccounts = accounts
             };
 
             return profile;
         }
 
-        public async Task<List<UserAccount>> GetAllUsers()
+        public async Task<List<IdentityUser>> GetAllUsers()
         {
-            return await _context.UserAccounts.ToListAsync();
+            return await _userManager.Users.ToListAsync();
         }
     }
 }

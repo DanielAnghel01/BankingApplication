@@ -6,14 +6,14 @@ namespace BankingApplication.Models
     public class Transaction
     {
         public int Id { get; set; }
-
+        public int? FromAccountId { get; set; }
+        public int? ToAccountId { get; set; }
         public decimal Amount { get; set; }
-        public string TransactionType { get; set; }
+        public DateTime Date { get; set; }
 
-        public DateTime TransactionDate { get; set; }
+        public string Description { get; set; }
 
-        public int BankAccountId { get; set; }
-        [ForeignKey("BankAccountId")]
-        public BankAccount BankAccount { get; set; }
+        public BankAccount? FromAccount { get; set; }
+        public BankAccount? ToAccount { get; set; }
     }
 }

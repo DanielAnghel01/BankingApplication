@@ -1,4 +1,6 @@
 ﻿using BankingApplication.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingApplication.Controllers
@@ -7,16 +9,24 @@ namespace BankingApplication.Controllers
     {
         private readonly IProfileService _profileService;
 
-        public ProfileController(IProfileService profileService)
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public ProfileController(IProfileService profileService, UserManager<IdentityUser> userManager)
         {
             _profileService = profileService;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
         {
-            int userId = 1;
+            var identityUserId = _userManager.GetUserId(User); // Gets the current logged-in user's ID
 
-            var profile = await _profileService.GetUserProfileAsync(userId);
+            if (identityUserId == null)
+            {
+                return RedirectToAction("Login", "Account"); // fallback for non-authenticated access
+            }
+
+            var profile = await _profileService.GetUserProfileAsync(identityUserId);
 
             if (profile == null)
             {

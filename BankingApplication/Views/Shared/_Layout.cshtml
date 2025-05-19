@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/BankingApplication.styles.css" asp-append-version="true" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 flex flex-col min-h-screen">
 
     <div class="flex flex-1">
@@ -20,7 +21,14 @@
                     <li class="mb-3"><a class="hover:text-gray-300" asp-area="" asp-controller="Dashboard" asp-action="Index">📊 Dashboard</a></li>
                     <li class="mb-3"><a class="hover:text-gray-300" asp-area="" asp-controller="Transactions" asp-action="Index">💳 Transactions</a></li>
                     <li class="mb-3"><a class="hover:text-gray-300" asp-area="" asp-controller="Transfer" asp-action="Index">💸 Transfer Funds</a></li>
-                    <li class="mb-3"><a class="hover:text-gray-300" asp-area="" asp-controller="Profile" asp-action="Index">👤 Profile</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="mb-3"><a class="hover:text-gray-300" asp-area="" asp-controller="Profile" asp-action="Index">👤 Profile</a></li>
+                    }
+                    else
+                    {
+                        <li class="mb-3"><a class="hover:text-gray-300" href="/Account/Login">👤 Profile</a></li>
+                    }
                     <li class="mb-3"><a class="hover:text-gray-300" asp-area="" asp-controller="ExchangeRates" asp-action="Index">📊 Exchange Rates</a></li>
                 </ul>
             </nav>
@@ -28,7 +36,22 @@
 
         <div class="flex-1 flex flex-col">
             <header class="bg-white shadow-md p-4 mb-5 flex justify-between items-center">
-                <h2 class="text-xl font-semibold">@ViewData["Title"]</h2>               
+                <h2 class="text-xl font-semibold">@ViewData["Title"]</h2>   
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+                            🔓 Logout
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                        🔐 Login
+                    </a>
+                }
             </header>
 
             <main role="main" class="flex-grow p-10">

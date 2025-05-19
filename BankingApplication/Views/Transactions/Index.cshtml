@@ -2,6 +2,48 @@
     ViewData["Title"] = "Transactions";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Show transactions history</h1>
+@model BankingApplication.Views.Dtos.UserTransactionViewModel
+
+<div class="max-w-5xl mx-auto p-6">
+
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-semibold text-gray-800">Transaction History for @Model.UserName</h2>
+        <div>
+            <a href="@Url.Action("Index", "Profile")" class="btn btn-secondary mr-2">Profile</a>
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-primary">Dashboard</a>
+        </div>
+    </div>
+
+    @if (Model.Transactions.Any())
+    {
+        <table class="min-w-full table-auto bg-white rounded shadow">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 text-left">Direction</th>
+                    <th class="px-4 py-2 text-left">From</th>
+                    <th class="px-4 py-2 text-left">To</th>
+                    <th class="px-4 py-2 text-left">Amount</th>
+                    <th class="px-4 py-2 text-left">Date</th>
+                    <th class="px-4 py-2 text-left">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model.Transactions)
+                {
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-2">@t.Direction</td>
+                        <td class="px-4 py-2">@t.FromAccountNumber</td>
+                        <td class="px-4 py-2">@t.ToAccountNumber</td>
+                        <td class="px-4 py-2">@t.Amount.ToString("C")</td>
+                        <td class="px-4 py-2">@t.Date.ToString("g")</td>
+                        <td class="px-4 py-2">@t.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-gray-600">No transactions found.</p>
+    }
 </div>

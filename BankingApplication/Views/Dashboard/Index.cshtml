@@ -2,6 +2,34 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Here you can view all your transactions, account balance and quick actions</h1>
+<div class="max-w-4xl mx-auto p-8">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Dashboard</h1>
+
+    <p class="text-center mb-8 text-lg">
+        Here you can view all your transactions, check account balances, and perform quick actions.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-md mx-auto">
+        <a asp-controller="Transactions" asp-action="Index" class="block bg-green-500 hover:bg-green-600 text-white font-semibold py-4 rounded text-center">
+            💳 View Transaction History
+        </a>
+
+        <a asp-controller="Transfer" asp-action="Deposit" class="block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 rounded text-center">
+            ➕ Make a Deposit
+        </a>
+
+        <a asp-controller="Transfer" asp-action="Withdraw" class="block bg-red-500 hover:bg-red-600 text-white font-semibold py-4 rounded text-center">
+            ➖ Make a Withdrawal
+        </a>
+
+        <a asp-controller="Transfer" asp-action="Index" class="block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-4 rounded text-center">
+            🔄 Make a Transfer
+        </a>
+    </div>
+
+    <div class="mt-10 text-center">
+        <a asp-controller="Profile" asp-action="Index" class="text-gray-700 underline hover:text-gray-900">
+            👤 Go to Profile
+        </a>
+    </div>
 </div>

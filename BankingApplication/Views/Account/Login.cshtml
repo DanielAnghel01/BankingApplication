@@ -1,4 +1,6 @@
-﻿@{
+﻿@using BankingApplication.Views.Dtos
+@model LoginViewModel
+@{
     ViewData["Title"] = "Login";
 }
 
@@ -6,21 +8,22 @@
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 class="text-2xl font-semibold text-blue-900 text-center mb-5">🔑 Login to Your Account</h2>
 
-        <form action="/Account/Login" method="POST" class="space-y-5">
+        <form asp-action="Login" asp-controller="Account" method="post" class="space-y-5">
+            @Html.AntiForgeryToken()
             <div>
                 <label for="email" class="block text-gray-700 font-medium">Email Address</label>
-                <input type="email" id="email" name="email" required
+                <input asp-for="Email" type="email" id="email" name="email" required
                        class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300">
             </div>
 
             <div>
                 <label for="password" class="block text-gray-700 font-medium">Password</label>
-                <input type="password" id="password" name="password" required
+                <input asp-for="Password" type="password" id="password" name="password" required
                        class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300">
             </div>
 
             <div class="flex items-center">
-                <input type="checkbox" id="remember" name="remember" class="mr-2">
+                <input asp-for="RememberMe" type="checkbox" id="remember" name="remember" class="mr-2">
                 <label for="remember" class="text-gray-700">Remember Me</label>
             </div>
 

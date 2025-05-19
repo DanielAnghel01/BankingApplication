@@ -1,11 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
+using BankingApplication.Views.Dtos;
 
 
 namespace BankingApplication.Models
 {
     public class BankAccount
     {
+        [Key]
         public int Id { get; set; }
 
         public string? AccountNumber { get; set; }
@@ -13,12 +16,12 @@ namespace BankingApplication.Models
 
         public decimal Balance { get; set; }
 
-        public string AccountType { get; set; } 
+        public AccountType AccountType { get; set; } 
         public DateTime CreatedAt { get; set; } 
 
-        public int UserId { get; set; }
+        public string? UserId { get; set; }
         [ForeignKey("UserId")]
-        public UserAccount? User { get; set; }
+        public IdentityUser? User { get; set; }
 
         public ICollection<Transaction>? Transactions { get; set; }
     }

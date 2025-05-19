@@ -1,4 +1,6 @@
 ﻿using BankingApplication.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
@@ -6,7 +8,7 @@ namespace BankingApplication.Infrastructure
 {
 
 
-    public class BankingDbContext : DbContext
+    public class BankingDbContext : IdentityDbContext<IdentityUser>
     {
         public BankingDbContext(DbContextOptions<BankingDbContext> options) : base(options) { }
 
@@ -22,6 +24,17 @@ namespace BankingApplication.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.FromAccount)
+                .WithMany() // optionally: WithMany("SentTransactions")
+                .HasForeignKey(t => t.FromAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.ToAccount)
+                .WithMany() // optionally: WithMany("ReceivedTransactions")
+                .HasForeignKey(t => t.ToAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using BankingApplication.Infrastructure;
 using BankingApplication.Models;
 using BankingApplication.Services.Interface;
+using BankingApplication.Views.Dtos;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace BankingApplication.Services
 {
@@ -14,7 +16,7 @@ namespace BankingApplication.Services
             _context = context;
         }
 
-        public async Task<BankAccount> CreateAccount(string accountHolderName, decimal initialDeposit, int UserId, string AccountType)
+        public async Task<BankAccount> CreateAccount(string accountHolderName, decimal initialDeposit, string UserId, AccountType AccountType)
         {
             var account = new BankAccount
             {
@@ -26,26 +28,27 @@ namespace BankingApplication.Services
                 AccountType = AccountType
             };
 
-            _context.BankAccounts.Add(account);
+            await _context.BankAccounts.AddAsync(account);
             await _context.SaveChangesAsync();
             if (initialDeposit > 0)
             {
-                _context.Transactions.Add(new Transaction
+                var transaction = new Transaction
                 {
-                    BankAccountId = account.Id,
+                    ToAccountId = account.Id,
                     Amount = initialDeposit,
-                    TransactionType = "Deposit",
-                    TransactionDate = DateTime.UtcNow
-                });
+                    Description = "Deposit",
+                    Date = DateTime.UtcNow
+                };
+                await _context.Transactions.AddAsync(transaction);
             }
-
+            
             await _context.SaveChangesAsync();
             return account;
         }
 
-        public async Task<bool> Deposit(int accountId, decimal amount)
+        public async Task<bool> Deposit(string accountNumber, decimal amount)
         {
-            var account = await _context.BankAccounts.FindAsync(accountId);
+            var account = await _context.BankAccounts.FirstOrDefaultAsync(e => e.AccountNumber == accountNumber);
 
             if (account == null || amount <= 0)
                 return false;
@@ -54,19 +57,19 @@ namespace BankingApplication.Services
 
             _context.Transactions.Add(new Transaction
             {
-                BankAccountId = accountId,
+                ToAccountId = account.Id,
                 Amount = amount,
-                TransactionType = "Deposit",
-                TransactionDate = DateTime.UtcNow
+                Description = "Deposit",
+                Date = DateTime.UtcNow
             });
 
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> Withdraw(int accountId, decimal amount)
+        public async Task<bool> Withdraw(string accountNumber, decimal amount)
         {
-            var account = await _context.BankAccounts.FindAsync(accountId);
+            var account = await _context.BankAccounts.FirstOrDefaultAsync(e => e.AccountNumber == accountNumber);
 
             if (account == null || amount <= 0 || account.Balance < amount)
                 return false;
@@ -75,10 +78,10 @@ namespace BankingApplication.Services
 
             _context.Transactions.Add(new Transaction
             {
-                BankAccountId = accountId,
+                FromAccountId = account.Id,
                 Amount = amount,
-                TransactionType = "Withdrawal",
-                TransactionDate = DateTime.UtcNow
+                Description = "Withdrawal",
+                Date = DateTime.UtcNow
             });
 
             await _context.SaveChangesAsync();
@@ -87,8 +90,8 @@ namespace BankingApplication.Services
 
         public async Task<bool> Transfer(int fromAccountId, int toAccountId, decimal amount)
         {
-            var fromAccount = await _context.BankAccounts.FindAsync(fromAccountId);
-            var toAccount = await _context.BankAccounts.FindAsync(toAccountId);
+            var fromAccount = await _context.BankAccounts.FirstOrDefaultAsync(e => e.AccountNumber == fromAccountId.ToString());
+            var toAccount = await _context.BankAccounts.FirstOrDefaultAsync(e => e.AccountNumber == toAccountId.ToString());
 
             if (fromAccount == null || toAccount == null || amount <= 0 || fromAccount.Balance < amount)
                 return false;
@@ -96,20 +99,24 @@ namespace BankingApplication.Services
             fromAccount.Balance -= amount;
             toAccount.Balance += amount;
 
-            _context.Transactions.Add(new Transaction
+            await _context.Transactions.AddAsync(new Transaction
             {
-                BankAccountId = fromAccountId,
+                FromAccountId = fromAccount.Id,
+                ToAccountId = toAccount.Id,
                 Amount = amount,
-                TransactionType = "Transfer Out",
-                TransactionDate = DateTime.UtcNow
+                Description = "Transfer Out",
+                Date = DateTime.UtcNow
             });
 
-            _context.Transactions.Add(new Transaction
+            await _context.SaveChangesAsync();
+
+            await _context.Transactions.AddAsync(new Transaction
             {
-                BankAccountId = toAccountId,
+                ToAccountId = toAccount.Id,
+                FromAccountId = fromAccount.Id,
                 Amount = amount,
-                TransactionType = "Transfer In",
-                TransactionDate = DateTime.UtcNow
+                Description = "Transfer In",
+                Date = DateTime.UtcNow
             });
 
             await _context.SaveChangesAsync();
@@ -126,9 +133,28 @@ namespace BankingApplication.Services
         public async Task<List<Transaction>> GetTransactionHistory(int accountId)
         {
             return await _context.Transactions
-                .Where(t => t.BankAccountId == accountId)
-                .OrderByDescending(t => t.TransactionDate)
+                .Where(t => t.FromAccountId == accountId)
+                .OrderByDescending(t => t.Date)
                 .ToListAsync();
+        }
+
+        public async Task<List<Transaction>> GetAllUserTransactions(string userId)
+        {
+            // Get all the user's account IDs
+            var userAccountIds = await _context.BankAccounts
+                .Where(acc => acc.UserId == userId)
+                .Select(acc => acc.Id)
+                .ToListAsync();
+
+            // Fetch all transactions involving any of the user's accounts
+            var transactions = await _context.Transactions
+                .Where(t => userAccountIds.Contains((int)t.FromAccountId) || userAccountIds.Contains((int)t.ToAccountId))
+                .Include(t => t.FromAccount)
+                .Include(t => t.ToAccount)
+                .OrderByDescending(t => t.Date)
+                .ToListAsync();
+
+            return transactions;
         }
 
         private string GenerateAccountNumber()

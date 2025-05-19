@@ -1,5 +1,6 @@
 ﻿using BankingApplication.Models;
 using BankingApplication.Services.Interface;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -9,11 +10,13 @@ namespace BankingApplication.Controllers
     {
         private readonly IBankAccountService _bankAccountService;
         private readonly IProfileService _profileService;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public BankAccountsController(IBankAccountService bankAccountService, IProfileService profileService)
+        public BankAccountsController(IBankAccountService bankAccountService, IProfileService profileService, UserManager<IdentityUser> userManager)
         {
             _bankAccountService = bankAccountService;
             _profileService = profileService;
+            _userManager = userManager;
         }
 
         // GET: BankAccounts
@@ -42,8 +45,10 @@ namespace BankingApplication.Controllers
         // GET: BankAccounts/Create
         public async Task<IActionResult> Create()
         {
-            var users = await _profileService.GetAllUsers();
+            var users = _userManager.Users.ToList(); 
             ViewBag.UserId = new SelectList(users, "Id", "FirstName");
+            
+
             return View();
         }
 
@@ -54,7 +59,8 @@ namespace BankingApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                var createdAccount = await _bankAccountService.CreateAccount(bankAccount.AccountHolderName, bankAccount.Balance, bankAccount.UserId, bankAccount.AccountType);
+                var userId = _userManager.GetUserId(User);
+                var createdAccount = await _bankAccountService.CreateAccount(bankAccount.AccountHolderName, bankAccount.Balance, userId, bankAccount.AccountType);
                 return RedirectToAction(nameof(Details), new { id = createdAccount.Id });
             }
 

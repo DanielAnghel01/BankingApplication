@@ -1,4 +1,5 @@
 using BankingApplication.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -21,7 +22,7 @@ namespace BankingApplication.Controllers
         public IActionResult Privacy()
         {
             return View();
-        } 
+        }
         public IActionResult Terms()
         {
             return View();
