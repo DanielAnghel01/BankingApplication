@@ -2,6 +2,7 @@
 using BankingApplication.Services;
 using BankingApplication.Services.Interface;
 using BankingApplication.Views.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -22,7 +23,7 @@ namespace BankingApplication.Controllers
             _bankAccountService = bankAccountService;
             _userManager = userManager;
         }
-
+        [Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> IndexAsync()
         {
             var user = await _userManager.GetUserAsync(User);

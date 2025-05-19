@@ -18,11 +18,12 @@ namespace BankingApplication.Controllers
         {
             return View();
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult Privacy()
         {
             return View();
         }
+        [Authorize(Roles = "User")]
         public IActionResult Terms()
         {
             return View();

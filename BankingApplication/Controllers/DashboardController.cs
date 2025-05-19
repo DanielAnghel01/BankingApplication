@@ -1,4 +1,5 @@
 ﻿using BankingApplication.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -12,7 +13,7 @@ namespace BankingApplication.Controllers
         {
             _logger = logger;
         }
-
+        [Authorize(Roles = "User, Admin")]
         public IActionResult Index()
         {
             return View();

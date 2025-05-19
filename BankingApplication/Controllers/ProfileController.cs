@@ -16,7 +16,7 @@ namespace BankingApplication.Controllers
             _profileService = profileService;
             _userManager = userManager;
         }
-
+        [Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> Index()
         {
             var identityUserId = _userManager.GetUserId(User); // Gets the current logged-in user's ID

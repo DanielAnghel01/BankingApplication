@@ -1,6 +1,7 @@
 ﻿using BankingApplication.Infrastructure;
 using BankingApplication.Models;
 using BankingApplication.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ namespace BankingApplication.Controllers
             _bankAccountService = bankAccountService;
             _context = context;
         }
-
+        [Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
